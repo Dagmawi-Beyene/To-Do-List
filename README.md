@@ -1,6 +1,8 @@
 # TodoList with React and TypeScript
 A simple TodoList with React and Typescript
 
+Check it out [Live](http://www.to-do-list-salesframe.surge.sh)
+
 ## Features:
 
 * Create a new task
