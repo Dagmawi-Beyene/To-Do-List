@@ -5,7 +5,7 @@ import { loadFailure, loadSuccess } from '../actions/items';
 
 export function* load() {
   try {
-    const { data } = yield call(api.get, 'http://localhost:3000/items');
+    const { data } = yield call(api.get, 'https://jsonplaceholder.typicode.com/todos');
     yield put(loadSuccess(data));
   } catch (error) {
     yield put(loadFailure());
