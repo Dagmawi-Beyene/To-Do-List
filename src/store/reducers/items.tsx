@@ -5,6 +5,7 @@ const initialState: ItemsState = {
 };
 
 export default (state = initialState, action: TodoListActionTypes): ItemsState => {
+  
   switch (action.type) {
     case ItemsTypes.ADD_ITEM:
       return {

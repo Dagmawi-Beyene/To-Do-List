@@ -50,7 +50,7 @@ const TodoList = ({
 
   return (
     <div className="todo-list">
-      <Header title="TodoList" />
+      <Header title="To-do List" />
 
       <div className="content">
         <TodoForm
