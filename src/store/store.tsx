@@ -4,7 +4,12 @@ import reducers from './reducers/rootReducer';
 import rootSaga from './sagas/rootSaga';
 
 const sagaMiddleware = createSagaMiddleware();
-const store = createStore(reducers, compose(applyMiddleware(sagaMiddleware), (window as any).__REDUX_DEVTOOLS_EXTENSION__ && (window as any).__REDUX_DEVTOOLS_EXTENSION__()));
+const store = createStore(
+  reducers,
+  compose(
+    applyMiddleware(sagaMiddleware),
+  ),
+);
 
 sagaMiddleware.run(rootSaga);
 
