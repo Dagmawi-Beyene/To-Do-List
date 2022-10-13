@@ -5,7 +5,7 @@ import {
 } from './sagas';
 
 export default function* rootSaga() {
-  return yield all([
+  return ([
     takeLatest(ItemsTypes.LOAD_REQUEST, load),
     takeLatest(ItemsTypes.REMOVE_ITEM, deleteRequest),
     takeLatest(ItemsTypes.ADD_ITEM, createPost),
