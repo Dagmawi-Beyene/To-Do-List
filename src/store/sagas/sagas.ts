@@ -1,33 +1,90 @@
 import { call, put } from 'redux-saga/effects';
+import { auth, firestore, serverTimestamp } from '../../lib/firebase';
 import api from '../../services/api';
 import { TodoListActionTypes } from '../../types';
 import { loadFailure, loadSuccess } from '../actions/items';
 
+
+
 export function* load() {
+  // get all todos from firestore
   try {
-    const { data } = yield call(api.get, 'https://60ad6b0d80a61f0017330f06.mockapi.io/api/items/item');
-    console.log(data)
-    yield put(loadSuccess(data));
-  } catch (error) {
+    const todosRef = firestore.collection('users').doc(auth.currentUser?.uid).collection('todos');
+    //@ts-ignore
+    const querySnapshot = yield call([todosRef, todosRef.get]);
+    const todos = querySnapshot.docs.map((doc: any) => doc.data());
+    yield put(loadSuccess(todos));
+  }
+  catch (err) {
     yield put(loadFailure());
   }
 }
 
 export function* deleteRequest({ payload }: TodoListActionTypes) {
   try {
-    yield call(api.delete, `https://60ad6b0d80a61f0017330f06.mockapi.io/api/items/item/${payload.id}`);
+    // find item using id in firestore and delete
+    firestore
+    .collection('users')
+    .doc(auth?.currentUser?.uid)
+    .collection('todos')
+    .where('id', '==', payload.id)
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        doc.ref.delete();
+      });
+    });
+
   } catch (error) {
     console.log('DELETE ERROR');
   }
 }
 
 export const createPost = ({payload}: TodoListActionTypes) => {
-  console.log("api call ->", payload)
   let randomId = Math.random()*100;
-  return api.post('https://60ad6b0d80a61f0017330f06.mockapi.io/api/items/item',{"id":randomId, "text": payload.text, "complete": false, "editing": false })
+  firestore
+			.collection('users')
+			.doc(auth?.currentUser?.uid)
+			.collection('todos')
+			.add({
+        id: randomId,
+        text: payload.text,
+        complete: false,
+        editing: false,
+        createdAt: serverTimestamp(),
+      })
+ 
 }
 
 export const createPut = ({payload}: TodoListActionTypes) => {
-  console.log("api call ->", payload)
-  return api.put(`https://60ad6b0d80a61f0017330f06.mockapi.io/api/items/item/${payload.id}`,{"id":payload.id, "text": payload.text, "complete": false, "editing": false })
+  firestore
+      .collection('users')
+      .doc(auth?.currentUser?.uid)
+      .collection('todos')
+      .where('id', '==', payload.id)
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          doc.ref.update({
+            text: payload.text,
+          
+          });
+        });
+      });
+}
+
+export const createPutToggle = ({payload}: TodoListActionTypes) => {
+  firestore
+      .collection('users')
+      .doc(auth?.currentUser?.uid)
+      .collection('todos')
+      .where('id', '==', payload.id)
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          doc.ref.update({
+            complete: payload.complete, 
+          });
+        });
+      });
 }

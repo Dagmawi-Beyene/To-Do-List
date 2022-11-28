@@ -16,7 +16,7 @@ interface StateProps {
 
 interface DispatchProps {
   addItem(text: string): void,
-  toggleItem(id: number): void,
+  toggleItem(id: number, complete: boolean): void,
   toggleEditItem(id: number): void,
   updateItem(id: number, text: string): void,
   removeItem(id: number): void,

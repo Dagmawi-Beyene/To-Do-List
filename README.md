@@ -8,15 +8,18 @@ Check it out [Live](http://www.to-do-list-salesframe.surge.sh)
 * Create a new task
 * Edit task
 * Toggle task
-* Delete task (using REST API)
+* Delete task (using Firebase API)
 * Filter items (show all, active and completed)
 * Show counter
-* Load items from Fake API
+* Load items from Firebase API
 
 ## Getting Started
 
+### Prerequisites
+get the configuration file from firebase and put it in a .env file in the root of the project
+
 ### Dependencies:
-Tools needed to run this app: `node` and `npm`
+Tools needed to run this app: `node v14` and `npm`
 
 ### Installing:
 * `npm install` to install dependencies
