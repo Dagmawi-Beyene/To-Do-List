@@ -1,4 +1,4 @@
-# TodoList with React and TypeScript
+# TodoList with React and TypeScript for Server Programming course
 A simple TodoList with React and Typescript
 
 Check it out [Live](http://www.to-do-list-salesframe.surge.sh)

@@ -43,8 +43,6 @@ export function AuthenticationForm(props: PaperProps) {
 		}
 	})
 
-	// redirect to home page if user is logged in
-
 	useEffect(() => {
 		if (user) {
 			navigate('/')
@@ -77,6 +75,47 @@ export function AuthenticationForm(props: PaperProps) {
 		})
 	}
 
+	// login with email and password
+	const loginWithEmail = async () => {
+		const { email, password } = form.values
+		try {
+			await auth.signInWithEmailAndPassword(email, password)
+			navigate('/')
+		} catch (error) {
+			console.log(error)
+			alert(error)
+		}
+	}
+
+	// register with email and password
+	const registerWithEmail = async () => {
+		const { email, password, name } = form.values
+		try {
+			const result = await auth.createUserWithEmailAndPassword(email, password)
+			// add to users collection
+			if (result?.user) {
+				const newUser = {
+					phoneNumber: result?.user?.phoneNumber,
+					photoURL: result?.user?.photoURL,
+					displayName: name,
+					email: result?.user?.email,
+					createdAt: serverTimestamp(),
+					emailVerifer: result?.user?.emailVerified,
+					role: 'user'
+				}
+				let userDoc = firestore.doc(`users/${result?.user?.uid}`)
+				const batch = firestore.batch()
+				batch.set(userDoc, newUser)
+				await batch.commit()
+			}
+			// redirect to /
+			navigate('/')
+		} catch (error) {
+			console.log(error)
+			alert(error)
+		}
+	}
+
 	return (
 		<Paper mx={300} radius="md" p="xl" withBorder {...props}>
 			<Text size="lg" weight={500}>
@@ -91,7 +130,15 @@ export function AuthenticationForm(props: PaperProps) {
 
 			<Divider label="Or continue with email" labelPosition="center" my="lg" />
 
-			<form onSubmit={form.onSubmit(() => {})}>
+			<form
+				onSubmit={form.onSubmit(() => {
+					if (type === 'login') {
+						loginWithEmail()
+					} else {
+						registerWithEmail()
+					}
+				})}
+			>
 				<Stack>
 					{type === 'register' && (
 						<TextInput
