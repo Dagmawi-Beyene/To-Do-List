@@ -6,6 +6,7 @@ import {
 	Container,
 	Group
 } from '@mantine/core'
+import { useNavigate } from 'react-router-dom'
 import React from 'react'
 
 const useStyles = createStyles((theme) => ({
@@ -50,7 +51,12 @@ const useStyles = createStyles((theme) => ({
 }))
 
 export default function AccessDenied() {
+	const navigate = useNavigate()
 	const { classes } = useStyles()
+
+	setTimeout(() => {
+		navigate('/auth')
+	}, 3000)
 
 	return (
 		<Container className={classes.root}>
